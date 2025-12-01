@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fikri - Web Portfolio</title>
+    
+    <!-- Script Tailwind CSS -->
+    <script src="https://cdn-tailwindcss.vercel.app/"></script>
+    
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* 1. Background Ungu Spirit */
+body {
+    font-family: 'Poppins', sans-serif;
+    /* Gradasi Ungu Gelap ke Hitam Pekat */
+    background: radial-gradient(circle at 50% 20%, #1a0b2e 0%, #02010a 100%);
+    color: #e9d5ff; /* Teks jadi ungu muda pucat agar serasi */
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.glass-card {
+    /* 1. Background Gradient (Ungu Gelap ke Hitam Transparan) */
+    background: linear-gradient(
+        160deg, 
+        rgba(45, 20, 60, 0.7) 0%,  /* Atas: Ungu agak terang */
+        rgba(10, 5, 20, 0.8) 100%  /* Bawah: Gelap pekat */
+    );
+    
+    /* 2. Blur Effect (Efek Kaca) */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    
+    /* 3. Border Halus (Ungu Pudar) */
+    border: 1px solid rgba(168, 85, 247, 0.2); 
+    
+    /* 4. SHAPE: Membuat sudutnya sangat bulat */
+    border-radius: 30px; /* Semakin besar angka, semakin bulat */
+    
+    /* 5. Shadow lembut */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    
+    /* Penting: Agar isi/gambar di dalam tidak keluar dari sudut bulat */
+    overflow: hidden; 
+    
+    transition: all 0.3s ease;
+}
+
+/* Efek saat Mouse Hover (Lebih Terang & Naik) */
+.glass-card:hover {
+    background: linear-gradient(
+        160deg, 
+        rgba(60, 30, 80, 0.8) 0%, 
+        rgba(20, 10, 30, 0.9) 100%
+    );
+    border-color: rgba(168, 85, 247, 0.5); /* Garis jadi lebih terang */
+    transform: translateY(-8px); /* Kartu naik sedikit */
+    box-shadow: 0 15px 40px rgba(126, 34, 206, 0.2); /* Glow ungu di belakang */
+}
+
+/* Vignette (Opsional: Agar pinggiran layar lebih gelap menyatu) */
+.vignette {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: -1;
+    background: radial-gradient(circle at center, transparent 0%, #02010a 90%);
+}
+        
+        /* Canvas untuk Particle Background */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Di belakang konten */
+            pointer-events: none;
+        }
+
+        /* Efek garis bawah kustom untuk judul bagian */
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: #ef4444; /* red-500 */
+            margin: 16px auto 0;
+            border-radius: 2px;
+        }
+        
+        /* Custom shape divider */
+        .shape-divider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            transform: rotate(180deg); 
+        }
+        .shape-divider svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 150px; 
+        }
+        .shape-divider .shape-fill {
+            fill: #0d1222; 
+        }
+
+        /* Warna custom */
+        .custom-navy-950 { background-color: #150b1a; }
+        .custom-navy-800 { background-color: #150b1a; }
+        .custom-red-500 { color: #ef4444; }
+        .custom-red-600 { background-color: #dc2626; }
+        .custom-red-700 { background-color: #b91c1c; }
+
+        /* Scrollbar sembunyi untuk slider */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Modal Game */
+        #game-modal {
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="min-h-screen leading-relaxed">
+
+    <!-- Canvas Background (Efek Partikel) -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Header & Navigasi -->
+    <header class="bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 transition-all duration-300 shadow-lg ">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            
+            <!-- Nama/Logo -->
+            <a href="#home" class="text-2xl font-bold text-white hover:text-red-400 transition-colors duration-300 flex items-center">
+                <img src="Image/Ryz.jpg" alt="Logo" class="w-10 h-10 object-cover inline-block mr-2 rounded-full border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"> 
+                Fikri A F
+            </a>
+            
+            <!-- Menu Desktop -->
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="#home" class="text-gray-300 hover:text-red-400 transition-colors duration-300 font-medium">Home</a>
+                <a href="#about" class="text-gray-300 hover:text-red-400 transition-colors duration-300 font-medium">About Me</a>
+                <a href="#skills" class="text-gray-300 hover:text-red-400 transition-colors duration-300 font-medium">Skills</a>
+                <a href="#projects" class="text-gray-300 hover:text-red-400 transition-colors duration-300 font-medium">Projects</a>
+                <a href="#awards" class="text-gray-300 hover:text-red-400 transition-colors duration-300 font-medium">Awards</a>
+                <a href="#experience" class="text-gray-300 hover:text-red-400 transition-colors duration-300 font-medium">Experience</a>
+                <a href="#education" class="text-gray-300 hover:text-red-400 transition-colors duration-300 font-medium">Education</a>
+                <a href="#contact" class="bg-red-600 hover:bg-red-800 text-white font-semibold px-4 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-red-900/50">
+                    Contact
+                </a>
+            </div>
+
+            <!-- Tombol Menu Mobile -->
+            <button id="menu-btn" class="md:hidden focus:outline-none">
+                <svg class="w-6 h-6 text-white" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </nav>
+
+        <!-- Menu Mobile -->
+        <div id="mobile-menu" class="md:hidden hidden bg-gray-800 shadow-xl">
+            <a href="#home" class="block py-3 px-6 text-gray-300 hover:bg-gray-700 hover:text-red-400 transition-colors">Home</a>
+            <a href="#about" class="block py-3 px-6 text-gray-300 hover:bg-gray-700 hover:text-red-400 transition-colors">About Me</a>
+            <a href="#skills" class="block py-3 px-6 text-gray-300 hover:bg-gray-700 hover:text-red-400 transition-colors">Skills</a>
+            <a href="#awards" class="block py-3 px-6 text-gray-300 hover:bg-gray-700 hover:text-red-400 transition-colors">Awards</a>
+            <a href="#projects" class="block py-3 px-6 text-gray-300 hover:bg-gray-700 hover:text-red-400 transition-colors">Projects</a>
+            <a href="#experience" class="block py-3 px-6 text-gray-300 hover:bg-gray-700 hover:text-red-400 transition-colors">Experience</a>
+            <a href="#education" class="block py-3 px-6 text-gray-300 hover:bg-gray-700 hover:text-red-400 transition-colors">Education</a>
+            <a href="#contact" class="block py-3 px-6 text-gray-300 hover:bg-gray-700 hover:text-red-400 transition-colors">Contact</a>
+        </div>
+    </header>
+
+    <!-- Konten Utama -->
+    <main class="container mx-auto px-6">
+
+        <!-- 1. Bagian Hero / Profil -->
+        <section id="home" class="relative min-h-[80vh] flex flex-col items-center justify-center pt-20 pb-40 text-center md:text-left overflow-hidden z-10 mt-8">
+            <!-- Background gradient dihapus/dibuat transparan agar partikel terlihat -->
+            
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between w-full max-w-6xl px-8">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+                        Hi, I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400">Fikri Achmad Fadilah</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
+                        Aspiring Game Developer <br> Creating Fun & Interactive Experiences.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                        <!-- Tombol Explore Projects -->
+                        <a href="#projects" class="bg-red-600 hover:bg-red-800 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg hover:shadow-red-900/50 text-lg inline-flex items-center justify-center">
+                            Explore Projects 
+                            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+
+                        <!-- Tombol Mini Game (BARU) -->
+                        <button onclick="openGameModal()" class="bg-gray-800 hover:bg-gray-700 text-white border border-gray-600 hover:border-red-500 font-semibold py-3 px-8 rounded-lg transition-all duration-300 text-lg inline-flex items-center justify-center group">
+                            <span class="mr-2">🎮</span> Play Mini-Game
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-end md:justify-end relative">
+                    <!-- Efek Glow di belakang foto -->
+                    <div class="absolute inset-0 bg-red-500/20 blur-3xl rounded-full -z-10 transform scale-75"></div>
+                    <img src="Image/Karakter1.png" alt="Photo" class="w-64 h-64 md:w-96 md:h-96 object-contain drop-shadow-2xl rounded-xl transform transition hover:scale-105 duration-500">
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Tentang Saya -->
+        <section id="about" class="py-24 custom-navy-950 -mt-8 rounded-xl relative z-40">
+            <h2 class="text-4xl font-bold text-center text-white mb-16 section-title">About Me</h2>
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 bg-[#0d1222] backdrop-blur-sm rounded-xl p-8 rounded-2xl shadow-2xl">
+                <div class="md:w-1/3 flex justify-center">
+                    <img src="image/Karakter2.png" alt="Photo" class="w-48 h-48 md:w-64 md:h-64 object-contain drop-shadow-lg rounded-xl">
+                </div>
+                <div class="md:w-2/3 text-center md:text-left">
+                    <p class="text-lg text-gray-300 mb-6 leading-relaxed">
+                        Hi! I'm currently studying Informatics Engineering at UNNES, but when I'm not buried in assignments, I'm developing games. It's my true passion. I'm really comfortable with C#, and Unity is my favorite engine for bringing ideas to life. I'm always excited to work on the next fun project.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="flex items-start text-gray-300">
+                            <svg class="w-6 h-6 custom-red-500 mr-3 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-6h-2v6zm0-8h2V7h-2v2z"></path></svg>
+                            <p><strong class="text-white">Game Development</strong> - Building immersive 2D/3D games.</p>
+                        </div>
+                        <div class="flex items-start text-gray-300">
+                            <svg class="w-6 h-6 custom-red-500 mr-3 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-6h-2v6zm0-8h2V7h-2v2z"></path></svg>
+                            <p><strong class="text-white">Unity Engine</strong> - Creating smooth gameplay mechanics.</p>
+                        </div>
+                        <div class="flex items-start text-gray-300">
+                            <svg class="w-6 h-6 custom-red-500 mr-3 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-6h-2v6zm0-8h2V7h-2v2z"></path></svg>
+                            <p><strong class="text-white">Clean Code</strong> - Efficient & readable C# scripts.</p>
+                        </div>
+                        <div class="flex items-start text-gray-300">
+                            <svg class="w-6 h-6 custom-red-500 mr-3 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-6h-2v6zm0-8h2V7h-2v2z"></path></svg>
+                            <p><strong class="text-white">Always Evolving</strong> - Learning new tech constantly.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. SKILLS -->
+        <section id="skills" class="py-24 mt-12">
+            <h2 class="text-4xl font-bold text-center text-white mb-16 section-title">Skills</h2>
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <!-- 1. Game Development -->
+                    <div class="bg-gray-900/80 backdrop-blur border border-gray-700 p-6 rounded-xl shadow-xl hover:transform hover:scale-105 transition-transform duration-300 hover:border-red-500/50">
+                        <h3 class="text-xl font-bold text-white mb-4 flex items-center border-b border-gray-700 pb-2">
+                            <span class="text-2xl mr-2">🎮</span> Game Development
+                        </h3>
+                        <ul class="space-y-3 text-gray-300">
+                            <li class="flex items-center"><span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>Unity (2D & 3D)</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>C# (OOP & Scripting)</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>Gameplay Programming</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>UI Implementation</li>
+                        </ul>
+                    </div>
+
+                    <!-- 2. Web Development -->
+                    <div class="bg-gray-900/80 backdrop-blur border border-gray-700 p-6 rounded-xl shadow-xl hover:transform hover:scale-105 transition-transform duration-300 hover:border-red-500/50">
+                        <h3 class="text-xl font-bold text-white mb-4 flex items-center border-b border-gray-700 pb-2">
+                            <span class="text-2xl mr-2">🌐</span> Web Development
+                        </h3>
+                        <ul class="space-y-3 text-gray-300">
+                            <li class="flex items-center"><span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>HTML5 & CSS3</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>Tailwind CSS</li>
+                        </ul>
+                    </div>
+
+                    <!-- 3. Tools & Workflow -->
+                    <div class="bg-gray-900/80 backdrop-blur border border-gray-700 p-6 rounded-xl shadow-xl hover:transform hover:scale-105 transition-transform duration-300 hover:border-red-500/50">
+                        <h3 class="text-xl font-bold text-white mb-4 flex items-center border-b border-gray-700 pb-2">
+                            <span class="text-2xl mr-2">🛠️</span> Tools & Workflow
+                        </h3>
+                        <ul class="space-y-3 text-gray-300">
+                            <li class="flex items-center"><span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>Git & GitHub</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>Canva</li>
+                            <!-- Added Figma here as per request -->
+                            <li class="flex items-center"><span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>Figma</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Proyek (HORIZONTAL SCROLL) -->
+        <section id="projects" class="py-24 custom-navy-800 rounded-xl mt-12 relative">
+            <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none"></div>
+            <h2 class="text-4xl font-bold text-center text-white mb-8 section-title relative z-10">My Projects</h2>
+            <p class="text-center text-gray-400 mb-12 relative z-10">Swipe left to see more projects</p>
+            
+            <div class="container mx-auto px-6 relative z-10">
+                <!-- Container Horizontal Scroll -->
+                <div class="flex overflow-x-auto gap-8 py-12 px-4 hide-scrollbar snap-x snap-mandatory">
+                    <div class="min-w-[300px] md:min-w-[380px] bg-gray-900 rounded-lg overflow-hidden shadow-xl transform transition-transform duration-300 hover:scale-105 flex flex-col snap-center border border-gray-700">
+                        <img src="Image/Homescreen.png" alt="Panda Tea" class="w-full h-48 object-cover">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold text-white mb-2">Panda Tea</h3>
+                            <p class="text-gray-400 mb-4 flex-grow text-sm">A spooky cooking simulator built with Unity. Players manage ingredients, cook meals, and serve ghost customers. Won 'Best Game' at Game Jam Rangers UNNES 2025.</p>
+                            <div class="mt-4">
+                                <a href="https://rijoooo.itch.io/panda-tea" target="_blank" class="inline-flex items-center text-red-400 hover:text-red-300 font-bold uppercase tracking-wider text-sm">
+                                    Play on itch.io <span class="ml-1">→</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="min-w-[300px] md:min-w-[380px] bg-gray-900 rounded-lg overflow-hidden shadow-xl transform transition-transform duration-300 hover:scale-105 flex flex-col snap-center border border-gray-700">
+                        <img src="Image/MainBG.png" alt="Grime Rush" class="w-full h-48 object-cover">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold text-white mb-2">Grime Rush</h3>
+                            <p class="text-gray-400 mb-4 flex-grow text-sm">An educational waste-sorting game built with Unity. Players must categorize trash into correct bins. Developed for IT COMPETITION AMIKOM SURAKARTA 2025.</p>
+                            <div class="mt-4">
+                                <a href="https://rijoooo.itch.io/grime-rush" target="_blank" class="inline-flex items-center text-red-400 hover:text-red-300 font-bold uppercase tracking-wider text-sm">
+                                    Play on itch.io <span class="ml-1">→</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="min-w-[300px] md:min-w-[380px] bg-gray-900 rounded-lg overflow-hidden shadow-xl transform transition-transform duration-300 hover:scale-105 flex flex-col snap-center border border-gray-700">
+                        <img src="Image/bisfolk.png" alt="Space Shooter" class="w-full h-48 object-cover">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold text-white mb-2">The Beastfolk Ramparts</h3>
+                            <p class="text-gray-400 mb-4 flex-grow text-sm">Created for GameJam+ 2025, this game challenges players to defend the village against monster attacks using tactical tower placement.</p>
+                            <div class="mt-4">
+                                <a href="https://rijoooo.itch.io/the-beastfolk-ramparts" target="_blank" class="inline-flex items-center text-red-400 hover:text-red-300 font-bold uppercase tracking-wider text-sm">
+                                    Play on itch.io <span class="ml-1">→</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="min-w-[300px] md:min-w-[380px] bg-gray-900 rounded-lg overflow-hidden shadow-xl transform transition-transform duration-300 hover:scale-105 flex flex-col snap-center border border-gray-700">
+                        <img src="Image/buli.png" alt="Platformer 2D" class="w-full h-48 object-cover">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold text-white mb-2">Bully Buster</h3>
+                            <p class="text-gray-400 mb-4 flex-grow text-sm">Bully Buster is a 3D Unity game that gamifies conflict resolution. It combines rhythm, timing, and dialogue mechanics to teach empathy and negotiation skills.</p>
+                            <div class="mt-4">
+                                <a href="https://rijoooo.itch.io/bully-buster" target="_blank" class="inline-flex items-center text-red-400 hover:text-red-300 font-bold uppercase tracking-wider text-sm">
+                                    Play on itch.io <span class="ml-1">→</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Pengalaman (Lomba & Organisasi) -->
+        <section id="awards" class="py-24 mt-12">
+            <h2 class="text-4xl font-bold text-center text-white mb-16 section-title">Honor & Awards</h2>
+            <div class="max-w-4xl mx-auto space-y-8">
+                <!-- Kartu Pengalaman 1 -->
+                <div class="bg-gray-900/50 p-6 rounded-lg shadow-xl border-l-4 border-red-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Jakarta's Best Mission Concept & Global Nominee</h3>
+                            <h4 class="text-lg font-semibold text-red-400 mb-2">NASA International Space Apps Challenge</h4>
+                        </div>
+                        <span class="text-sm bg-gray-800 px-3 py-1 rounded-full text-gray-300">2024</span>
+                    </div>
+                </div>
+
+                <!-- Kartu Pengalaman 2 -->
+                <div class="bg-gray-900/50 p-6 rounded-lg shadow-xl border-l-4 border-red-500">
+                     <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Best Game Award</h3>
+                            <h4 class="text-lg font-semibold text-red-400 mb-2">Game Jam Rangers UNNES</h4>
+                        </div>
+                        <span class="text-sm bg-gray-800 px-3 py-1 rounded-full text-gray-300">2025</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Pengalaman (Lomba & Organisasi) -->
+        <section id="experience" class="py-24 mt-12">
+            <h2 class="text-4xl font-bold text-center text-white mb-16 section-title">Experience</h2>
+            <div class="max-w-4xl mx-auto space-y-8">
+                <!-- Kartu Pengalaman 1 -->
+                <div class="bg-gray-900/50 p-6 rounded-lg shadow-xl border-l-4 border-red-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Forum Mahasiswa Islam (FMI)</h3>
+                            <h4 class="text-lg font-semibold text-red-400 mb-2">Staff of Hujanmed</h4>
+                        </div>
+                        <span class="text-sm bg-gray-800 px-3 py-1 rounded-full text-gray-300">2024</span>
+                    </div>
+                    <p class="text-gray-300 mt-2">
+                        Executed social media strategies by creating content to maintain active communication. Supported the department in organizing networking events and comparative studies.
+                    </p>
+                </div>
+
+                <!-- Kartu Pengalaman 2 -->
+                <div class="bg-gray-900/50 p-6 rounded-lg shadow-xl border-l-4 border-red-500">
+                     <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Forum Mahasiswa Islam (FMI)</h3>
+                            <h4 class="text-lg font-semibold text-red-400 mb-2">Head of Hujanmed    </h4>
+                        </div>
+                        <span class="text-sm bg-gray-800 px-3 py-1 rounded-full text-gray-300">2025</span>
+                    </div>
+                    <p class="text-gray-300 mt-2">
+                        Managed the organization's social media presence and public image. Additionally, coordinated and executed comparative study events with other institutions.
+                    </p>
+                </div>
+                
+                <!-- Kartu Pengalaman 3 -->
+                <div class="bg-gray-900/50 p-6 rounded-lg shadow-xl border-l-4 border-red-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">DPM FMIPA UNNES</h3>
+                            <h4 class="text-lg font-semibold text-red-400 mb-2">Head of Infokom</h4>
+                        </div>
+                        <span class="text-sm bg-gray-800 px-3 py-1 rounded-full text-gray-300">2025</span>
+                    </div>
+                    <p class="text-gray-300 mt-2">
+                        Oversaw publication and media strategy for the student legislative council. Successfully managed information flow regarding faculty policies and student advocacy.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 6. Edukasi -->
+        <section id="education" class="py-24 custom-navy-800 rounded-xl mt-12">
+            <h2 class="text-4xl font-bold text-center text-white mb-16 section-title">Education</h2>
+            <div class="max-w-2xl mx-auto space-y-6">
+                <div class="bg-[#0d1222] p-6 rounded-lg shadow-lg flex items-center gap-4">
+                    <div class="bg-red-900/30 p-3 rounded-full">
+                        <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-white">Universitas Negeri Semarang</h4>
+                        <p class="text-red-400">Informatics Engineering <span class="text-gray-500 text-sm ml-2">2023 - 2027</span></p>
+                    </div>
+                </div>
+                <div class="bg-[#0d1222] p-6 rounded-lg shadow-lg flex items-center gap-4">
+                    <div class="bg-red-900/30 p-3 rounded-full">
+                        <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-white">SMAIT THARIQ BIN ZIYAD</h4>
+                        <p class="text-red-400">Science <span class="text-gray-500 text-sm ml-2">2020 - 2023</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Sertifikat -->
+        <section id="certificates" class="py-24 mt-12">
+            <h2 class="text-4xl font-bold text-center text-white mb-16 section-title">Certificates</h2>
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="bg-gray-900/50 p-6 rounded-lg shadow-xl border-l-4 border-red-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Galactic Problem Solver - NASA International Space Apps Challenge</h3>
+                            <h4 class="text-lg font-semibold text-red-400 mb-2">NASA • 2025</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-900/50 p-6 rounded-lg shadow-xl border-l-4 border-red-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">3D Game Development Fundamentals</h3>
+                            <h4 class="text-lg font-semibold text-red-400 mb-2">Coding Studio • 2025</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-900/50 p-6 rounded-lg shadow-xl border-l-4 border-red-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">2D Game Development Fundamentals</h3>
+                            <h4 class="text-lg font-semibold text-red-400 mb-2">Coding Studio • 2025</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-900/50 p-6 rounded-lg shadow-xl border-l-4 border-red-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Fundamental Algorithm</h3>
+                            <h4 class="text-lg font-semibold text-red-400 mb-2">Coding Studio • 2024</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Kontak Person -->
+        <section id="contact" class="py-24 custom-navy-800 rounded-xl mt-12 mb-20">
+            <h2 class="text-4xl font-bold text-center text-white mb-8 section-title">Contact Me</h2>
+            <p class="text-center text-lg text-gray-300 max-w-2xl mx-auto mb-12">
+                Interested in collaboration? Let's build something amazing together.
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-8">
+                <a href="#contact" class="flex items-center space-x-3 bg-gray-900 p-4 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105 hover:bg-gray-700 border border-gray-700">
+                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <span class="text-white text-lg font-medium">fikri.achmad.fadilah.15@gmail.com</span>
+                </a>
+
+                <a href="https://rijoooo.itch.io" target="_blank" class="flex items-center space-x-3 bg-gray-900 p-4 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105 hover:bg-gray-700 border border-gray-700">
+                    <img src="Image/itch.png" alt="Itch.io" class="w-6 h-6 icon-red-filter">
+                    <span class="text-white text-lg font-medium">Itch.io</span>
+                </a>
+                
+                <a href="https://www.linkedin.com/in/fikri-achmad-fadilah" target="_blank" class="flex items-center space-x-3 bg-gray-900 p-4 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105 hover:bg-gray-700 border border-gray-700">
+                    <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
+                    <span class="text-white text-lg font-medium">LinkedIn</span>
+                </a>
+
+                <a href="https://github.com/Ryzzooo" target="_blank" class="flex items-center space-x-3 bg-gray-900 p-4 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105 hover:bg-gray-700 border border-gray-700">
+                    <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.109-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></pa></svg>
+                    <span class="text-white text-lg font-medium">GitHub</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- GAME MODAL POPUP -->
+    <div id="game-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-gray-900 border-2 border-red-500 rounded-xl p-4 shadow-2xl relative w-[95%] max-w-2xl mx-4 transform scale-95 transition-transform duration-300" id="modal-content">
+            <!-- Close Button -->
+            <button onclick="closeGameModal()" class="absolute -top-4 -right-4 bg-red-600 hover:bg-red-700 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold shadow-lg z-10">✕</button>
+            
+            <h3 class="text-2xl font-bold text-center text-white mb-4">Space Dodger <span class="text-red-500 text-sm block font-normal">Move mouse/touch to dodge!</span></h3>
+            
+            <!-- Canvas Game -->
+            <canvas id="mini-game-canvas" width="600" height="400" class="w-full bg-black rounded-lg cursor-crosshair shadow-inner border border-gray-700"></canvas>
+            
+            <div class="flex justify-between items-center mt-4">
+                <div class="text-white font-mono text-xl">Score: <span id="game-score" class="text-red-400">0</span></div>
+                <button onclick="startGame()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-bold">Restart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script JS (Particle + Mini Game) -->
+    <script>
+        // --- 1. LOGIKA MENU MOBILE ---
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        const mobileLinks = mobileMenu.getElementsByTagName('a');
+        for (const link of mobileLinks) {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        }
+
+        // --- 2. HU TAO THEME BACKGROUND SYSTEM ---
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width, height;
+            let particles = [];
+            
+            // Konfigurasi Warna Tema
+            const config = {
+    // Atas: Ungu Gelap (Samakan dengan warna tengah gradient CSS)
+    bgTop: '#1a0b2e',
+    
+    // Bawah: Hitam Ungu Pekat (Samakan dengan warna pinggir gradient CSS)
+    bgBottom: '#02010a',
+    
+    // Kupu-kupu biarkan merah (kontras bagus) atau ganti ungu muda '#d8b4fe'
+    butterflyColor: '#ff4d4d', 
+    
+    emberColors: ['#ff5c5c', '#ff3838', '#ffb8b8', '#ffa500'],
+    butterflyCount: 15,
+    emberCount: 60
+};
+
+            // Resize Handler
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+            
+            window.addEventListener('resize', resize);
+            resize();
+
+            // --- Class Particle (Induk) ---
+            class BaseParticle {
+                constructor(type) {
+                    this.type = type;
+                    this.init();
+                }
+                
+                init() {
+                    this.x = Math.random() * width;
+                    this.y = height + Math.random() * 100; // Mulai dari bawah layar
+                    
+                    if (this.type === 'butterfly') {
+                        this.size = Math.random() * 4 + 2; // Ukuran sayap
+                        this.speedY = Math.random() * 0.4 + 0.1; // Pelan & anggun
+                        this.swaySpeed = Math.random() * 0.02 + 0.01;
+                        this.swayRange = Math.random() * 50 + 20;
+                    } else { // ember (bara api)
+                        this.size = Math.random() * 1.5 + 0.5;
+                        this.speedY = Math.random() * 1.5 + 0.5; // Lebih cepat naik
+                        this.swaySpeed = Math.random() * 0.05 + 0.01;
+                    }
+
+                    this.opacity = 0; 
+                    this.fadeIn = true;
+                    this.color = this.type === 'butterfly' 
+                        ? config.butterflyColor 
+                        : config.emberColors[Math.floor(Math.random() * config.emberColors.length)];
+                    
+                    this.angle = Math.random() * Math.PI * 2;
+                    this.initialX = this.x;
+                }
+                
+                update() {
+                    // Gerak ke atas
+                    this.y -= this.speedY;
+                    
+                    // Gerak swaying (kiri-kanan)
+                    this.angle += this.swaySpeed;
+                    if (this.type === 'butterfly') {
+                        this.x = this.initialX + Math.sin(this.angle) * this.swayRange;
+                    } else {
+                        this.x += Math.sin(this.angle) * 0.5;
+                    }
+
+                    // Opacity Logic
+                    if (this.fadeIn) {
+                        this.opacity += 0.01;
+                        if (this.opacity >= (this.type === 'butterfly' ? 0.8 : 0.6)) {
+                            this.fadeIn = false;
+                        }
+                    } else if (this.y < height * 0.2) {
+                        this.opacity -= 0.01;
+                    }
+
+                    // Reset jika keluar layar atau mati
+                    if (this.y < -50 || (this.opacity <= 0 && !this.fadeIn)) {
+                        this.init();
+                    }
+                }
+            }
+
+            // --- Init Particles ---
+            function initParticles() {
+                particles = [];
+                // Buat Ember
+                for (let i = 0; i < config.emberCount; i++) {
+                    particles.push(new BaseParticle('ember'));
+                    particles[i].y = Math.random() * height; 
+                    particles[i].fadeIn = false;
+                    particles[i].opacity = Math.random() * 0.5;
+                }
+                // Buat Kupu-kupu
+                for (let i = 0; i < config.butterflyCount; i++) {
+                    particles.push(new BaseParticle('butterfly'));
+                    particles[particles.length-1].y = Math.random() * height;
+                    particles[particles.length-1].fadeIn = false;
+                    particles[particles.length-1].opacity = Math.random() * 0.8;
+                }
+            }
+
+            // --- Main Loop ---
+            function animateBackground() {
+                ctx.clearRect(0, 0, width, height);
+
+                // Draw Background Gradient
+                const grad = ctx.createLinearGradient(0, 0, 0, height);
+                grad.addColorStop(0, config.bgTop);
+                grad.addColorStop(1, config.bgBottom);
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, width, height);
+
+                // Update & Draw Particles
+                particles.forEach(p => {
+                    p.update();
+                    
+                    ctx.save();
+                    ctx.globalAlpha = p.opacity;
+                    
+                    if (p.type === 'butterfly') {
+                        ctx.translate(p.x, p.y);
+                        ctx.shadowBlur = 15;
+                        ctx.shadowColor = config.butterflyColor;
+                        ctx.fillStyle = config.butterflyColor;
+
+                        const flap = Math.sin(p.angle * 3); 
+                        const scaleX = 1 - (Math.abs(flap) * 0.3); 
+                        ctx.scale(scaleX, 1);
+
+                        // Sayap
+                        ctx.beginPath();
+                        ctx.ellipse(-p.size, 0, p.size * 1.2, p.size * 0.8, -0.2, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.ellipse(p.size, 0, p.size * 1.2, p.size * 0.8, 0.2, 0, Math.PI * 2);
+                        ctx.fill();
+
+                    } else {
+                        // Ember
+                        ctx.shadowBlur = 5;
+                        ctx.shadowColor = p.color;
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.restore();
+                });
+
+                requestAnimationFrame(animateBackground);
+            }
+
+            initParticles();
+            animateBackground();
+
+
+        // --- 3. MINI GAME LOGIC (SPACE DODGER) ---
+        const modal = document.getElementById('game-modal');
+        const modalContent = document.getElementById('modal-content');
+        const gameCanvas = document.getElementById('mini-game-canvas');
+        const gCtx = gameCanvas.getContext('2d');
+        const scoreEl = document.getElementById('game-score');
+        
+        let gameLoopId;
+        let gameActive = false;
+        let player = { x: 300, y: 350, width: 20, height: 20 };
+        let enemies = [];
+        let score = 0;
+        let frameCount = 0;
+
+        function openGameModal() {
+            modal.classList.remove('hidden');
+            // Animasi fade in
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+            startGame();
+        }
+
+        function closeGameModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+            gameActive = false;
+            cancelAnimationFrame(gameLoopId);
+        }
+
+        // Mouse Control
+        gameCanvas.addEventListener('mousemove', (e) => {
+            const rect = gameCanvas.getBoundingClientRect();
+            // Skala untuk responsif canvas
+            const scaleX = gameCanvas.width / rect.width;
+            let mouseX = (e.clientX - rect.left) * scaleX;
+            
+            player.x = mouseX - player.width / 2;
+            // Batas layar
+            if (player.x < 0) player.x = 0;
+            if (player.x > gameCanvas.width - player.width) player.x = gameCanvas.width - player.width;
+        });
+
+        // Touch Control (Mobile)
+        gameCanvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const rect = gameCanvas.getBoundingClientRect();
+            const scaleX = gameCanvas.width / rect.width;
+            let touchX = (e.touches[0].clientX - rect.left) * scaleX;
+            
+            player.x = touchX - player.width / 2;
+        }, { passive: false });
+
+        function startGame() {
+            enemies = [];
+            score = 0;
+            frameCount = 0;
+            scoreEl.innerText = "0";
+            gameActive = true;
+            loop();
+        }
+
+        function loop() {
+            if (!gameActive) return;
+            
+            // Clear Canvas
+            gCtx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // Efek trail
+            gCtx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+            // Player (Segitiga Merah)
+            gCtx.fillStyle = '#ef4444';
+            gCtx.beginPath();
+            gCtx.moveTo(player.x + player.width/2, player.y); // Atas
+            gCtx.lineTo(player.x + player.width, player.y + player.height); // Kanan Bawah
+            gCtx.lineTo(player.x, player.y + player.height); // Kiri Bawah
+            gCtx.fill();
+
+            // Spawn Enemies
+            frameCount++;
+            if (frameCount % 30 === 0) { // Tiap 30 frame spawn musuh
+                enemies.push({
+                    x: Math.random() * (gameCanvas.width - 20),
+                    y: -20,
+                    size: Math.random() * 15 + 10,
+                    speed: Math.random() * 3 + 2 + (score * 0.01) // Makin lama makin cepat
+                });
+            }
+
+            // Logic Musuh
+            for (let i = 0; i < enemies.length; i++) {
+                let e = enemies[i];
+                e.y += e.speed;
+
+                // Gambar Musuh (Kotak Putih)
+                gCtx.fillStyle = '#ffffff';
+                gCtx.fillRect(e.x, e.y, e.size, e.size);
+
+                // Cek Tabrakan
+                if (
+                    player.x < e.x + e.size &&
+                    player.x + player.width > e.x &&
+                    player.y < e.y + e.size &&
+                    player.y + player.height > e.y
+                ) {
+                    gameOver();
+                }
+
+                // Score nambah kalau lewat bawah
+                if (e.y > gameCanvas.height) {
+                    score++;
+                    scoreEl.innerText = score;
+                    enemies.splice(i, 1);
+                    i--;
+                }
+            }
+
+            gameLoopId = requestAnimationFrame(loop);
+        }
+
+        function gameOver() {
+            gameActive = false;
+            gCtx.fillStyle = 'white';
+            gCtx.font = '30px Arial';
+            gCtx.fillText("GAME OVER", 200, 200);
+            gCtx.font = '16px Arial';
+            gCtx.fillText("Click Restart to try again", 210, 230);
+        }
+
+    </script>
+
+</body>
+</html>
