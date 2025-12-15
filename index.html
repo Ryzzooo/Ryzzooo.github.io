@@ -129,6 +129,34 @@ body {
             scrollbar-width: none;
         }
 
+        /* Custom Scrollbar Styling */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 10px; /* Tinggi scrollbar horizontal */
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #111827; /* Warna track (gelap, gray-900) */
+            border-radius: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #374151; /* Warna handle (abu-abu sedang) */
+            border-radius: 8px;
+            border: 2px solid #111827; /* Memberi jarak antara handle dan track */
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #4b5563; /* Warna saat di-hover (lebih terang) */
+        }
+
+        /* Agar cursor berubah saat grab */
+        .cursor-grab {
+            cursor: grab;
+        }
+        .cursor-grabbing {
+            cursor: grabbing;
+        }
+
         /* Modal Game */
         #game-modal {
             backdrop-filter: blur(8px);
@@ -303,14 +331,14 @@ body {
         </section>
 
         <!-- 4. Proyek (HORIZONTAL SCROLL) -->
-        <section id="projects" class="py-24 custom-navy-800 rounded-xl mt-12 relative">
+        <section id="projects" class="py-8 custom-navy-800 rounded-xl mt-12 relative">
             <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none"></div>
             <h2 class="text-4xl font-bold text-center text-white mb-8 section-title relative z-10">My Projects</h2>
             <p class="text-center text-gray-400 mb-12 relative z-10">Swipe left to see more projects</p>
             
             <div class="container mx-auto px-6 relative z-10">
                 <!-- Container Horizontal Scroll -->
-                <div class="flex overflow-x-auto gap-8 py-12 px-4 hide-scrollbar snap-x snap-mandatory">
+                <div id="scrollContainer" class="custom-scrollbar flex overflow-x-auto gap-8 py-12 px-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none">
                     <div class="min-w-[300px] md:min-w-[380px] bg-gray-900 rounded-lg overflow-hidden shadow-xl transform transition-transform duration-300 hover:scale-105 flex flex-col snap-center border border-gray-700">
                         <img src="Image/Homescreen.png" alt="Panda Tea" class="w-full h-48 object-cover">
                         <div class="p-6 flex flex-col flex-grow">
@@ -889,9 +917,4 @@ body {
     </script>
 
 </body>
-
 </html>
-
-
-
-
